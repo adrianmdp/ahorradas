@@ -53,4 +53,5 @@ const createNavbar = () => {
 
 	document.body.appendChild(nav);
 };
+
 createNavbar();
