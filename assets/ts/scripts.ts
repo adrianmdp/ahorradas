@@ -1,11 +1,30 @@
-const STORAGE_KEY = "ahorradas";
-
 type ItemMenu = {
 	name: string;
 	href: string;
 };
 
 type ItemsMenu = ItemMenu[];
+
+type Category = {
+	id: number;
+	name: string;
+};
+
+type Operation = {
+	id?: number;
+	description: string;
+	category: number;
+	date: string;
+	amount: number;
+	type: "ganancia" | "gasto";
+};
+
+type LocalStorage = {
+	categories: Category[];
+	operations: Operation[];
+};
+
+const STORAGE_KEY = "ahorradas";
 
 const itemsMenu: ItemsMenu = [
 	{
@@ -20,9 +39,13 @@ const itemsMenu: ItemsMenu = [
 		name: "Reportes",
 		href: "/reportes",
 	},
+	{
+		name: "Contacto",
+		href: "/contacto",
+	},
 ];
 
-const createNavbar = () => {
+const createNavbar = (items) => {
 	const nav = document.createElement("nav");
 	const divleft = document.createElement("div");
 	const divRight = document.createElement("div");
@@ -34,7 +57,7 @@ const createNavbar = () => {
 	/* Lado derecho */
 	const ul = document.createElement("ul");
 
-	for (const item of itemsMenu) {
+	for (const item of items) {
 		const li = document.createElement("li");
 		const a = document.createElement("a");
 		const text = document.createTextNode(item.name);
@@ -56,38 +79,20 @@ const createNavbar = () => {
 	document.body.appendChild(nav);
 };
 
-createNavbar();
-
-type Category = {
-	id: number;
-	name: string;
-};
-
-type Operation = {
-	id?: number;
-	description: string;
-	category: Category;
-	date: string;
-	amount: number;
-	type: "ganancia" | "gasto";
-};
-
-type LocalStorage = {
-	categories?: Category[];
-	operations?: Operation[];
-};
+createNavbar(itemsMenu);
 
 const initialStorage: LocalStorage = {
 	categories: [
 		{
 			id: 1,
-			name: "Comida",
+			name: "Comidas",
 		},
 		{
 			id: 2,
 			name: "Trabajo",
 		},
 	],
+	operations: [],
 };
 
 /**
@@ -96,12 +101,9 @@ const initialStorage: LocalStorage = {
  * @returns
  */
 const getStorage = (key) => {
-	console.log(localStorage.getItem(key));
-
 	if (!localStorage.getItem(key)) {
 		setStorage(key, initialStorage);
 	}
-
 	return JSON.parse(localStorage.getItem(key));
 };
 
@@ -119,7 +121,7 @@ const setStorage = (key, value) => {
  * @param ctrls
  */
 
-const makeForm = (form, ctrls) => {
+const makeForm = (form, ctrls, parent) => {
 	for (const control of ctrls) {
 		let elem;
 
@@ -157,5 +159,5 @@ const makeForm = (form, ctrls) => {
 
 	form.appendChild(button);
 
-	document.body.appendChild(form);
+	parent.appendChild(form);
 };

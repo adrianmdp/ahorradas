@@ -12,8 +12,12 @@ var itemsMenu = [
         name: "Reportes",
         href: "/reportes"
     },
+    {
+        name: "Contacto",
+        href: "/contacto"
+    },
 ];
-var createNavbar = function () {
+var createNavbar = function (items) {
     var nav = document.createElement("nav");
     var divleft = document.createElement("div");
     var divRight = document.createElement("div");
@@ -22,8 +26,8 @@ var createNavbar = function () {
     divleft.appendChild(logo);
     /* Lado derecho */
     var ul = document.createElement("ul");
-    for (var _i = 0, itemsMenu_1 = itemsMenu; _i < itemsMenu_1.length; _i++) {
-        var item = itemsMenu_1[_i];
+    for (var _i = 0, items_1 = items; _i < items_1.length; _i++) {
+        var item = items_1[_i];
         var li = document.createElement("li");
         var a = document.createElement("a");
         var text = document.createTextNode(item.name);
@@ -38,18 +42,19 @@ var createNavbar = function () {
     nav.classList.add("primary-nav");
     document.body.appendChild(nav);
 };
-createNavbar();
+createNavbar(itemsMenu);
 var initialStorage = {
     categories: [
         {
             id: 1,
-            name: "Comida"
+            name: "Comidas"
         },
         {
             id: 2,
             name: "Trabajo"
         },
-    ]
+    ],
+    operations: []
 };
 /**
  *
@@ -57,7 +62,6 @@ var initialStorage = {
  * @returns
  */
 var getStorage = function (key) {
-    console.log(localStorage.getItem(key));
     if (!localStorage.getItem(key)) {
         setStorage(key, initialStorage);
     }
@@ -75,7 +79,7 @@ var setStorage = function (key, value) {
  *
  * @param ctrls
  */
-var makeForm = function (form, ctrls) {
+var makeForm = function (form, ctrls, parent) {
     for (var _i = 0, ctrls_1 = ctrls; _i < ctrls_1.length; _i++) {
         var control = ctrls_1[_i];
         var elem = void 0;
@@ -106,5 +110,5 @@ var makeForm = function (form, ctrls) {
     button.type = "submit";
     button.appendChild(document.createTextNode("Agregar"));
     form.appendChild(button);
-    document.body.appendChild(form);
+    parent.appendChild(form);
 };

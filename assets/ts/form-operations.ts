@@ -1,9 +1,9 @@
-const getCategories = () => {
+const get = (value: string) => {
 	const storage: LocalStorage = getStorage(STORAGE_KEY);
-	return storage.categories;
+	return storage[value];
 };
 
-const controls = [
+const controlsOp = [
 	{
 		type: "text",
 		name: "description",
@@ -13,7 +13,7 @@ const controls = [
 		type: "select",
 		name: "category",
 		id: "category",
-		options: getCategories(),
+		options: get("categories"),
 	},
 	{
 		type: "date",
@@ -50,9 +50,13 @@ const controlsCat = [
 	},
 ];
 
+const main = document.createElement("main");
+
 const formOperations = document.createElement("form");
 
-makeForm(formOperations, controls);
+makeForm(formOperations, controlsOp, main);
+
+document.body.appendChild(main);
 
 const getCategory = (id: number) => {
 	const storage: LocalStorage = getStorage(STORAGE_KEY);
@@ -74,14 +78,16 @@ const createOperation = (event) => {
 	const storage: LocalStorage = getStorage(STORAGE_KEY);
 
 	const newOperation: Operation = {
-		category: getCategory(parseInt(form.category.value)),
+		category: parseInt(form.category.value),
 		date: form.date.value,
 		description: form.description.value,
 		amount: form.amount.value,
 		type: form.type.value,
 	};
 
-	storage.operations?.push(newOperation);
+	storage.operations.push(newOperation);
+
+	setStorage(STORAGE_KEY, storage);
 };
 
 formOperations.addEventListener("submit", createOperation);

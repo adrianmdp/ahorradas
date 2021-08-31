@@ -1,8 +1,8 @@
-var getCategories = function () {
+var get = function (value) {
     var storage = getStorage(STORAGE_KEY);
-    return storage.categories;
+    return storage[value];
 };
-var controls = [
+var controlsOp = [
     {
         type: "text",
         name: "description",
@@ -12,7 +12,7 @@ var controls = [
         type: "select",
         name: "category",
         id: "category",
-        options: getCategories()
+        options: get("categories")
     },
     {
         type: "date",
@@ -47,8 +47,10 @@ var controlsCat = [
         id: "name"
     },
 ];
+var main = document.createElement("main");
 var formOperations = document.createElement("form");
-makeForm(formOperations, controls);
+makeForm(formOperations, controlsOp, main);
+document.body.appendChild(main);
 var getCategory = function (id) {
     var storage = getStorage(STORAGE_KEY);
     for (var _i = 0, _a = storage.categories; _i < _a.length; _i++) {
@@ -59,18 +61,18 @@ var getCategory = function (id) {
     return null;
 };
 var createOperation = function (event) {
-    var _a;
     event.preventDefault();
     console.log("Funciona");
     var form = event.target;
     var storage = getStorage(STORAGE_KEY);
     var newOperation = {
-        category: getCategory(parseInt(form.category.value)),
+        category: parseInt(form.category.value),
         date: form.date.value,
         description: form.description.value,
         amount: form.amount.value,
         type: form.type.value
     };
-    (_a = storage.operations) === null || _a === void 0 ? void 0 : _a.push(newOperation);
+    storage.operations.push(newOperation);
+    setStorage(STORAGE_KEY, storage);
 };
 formOperations.addEventListener("submit", createOperation);
